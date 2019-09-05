@@ -9,9 +9,9 @@ try(){
 	actual="$?"
 
 	if [ "$actual" = "$expected" ]; then
-		echo "$input => $actual"
+		echo "$input -> $actual"
 	else
-		echo "$input => $expected expected, but got $actual"
+		echo "$input -> $expected expected, but got $actual"
 		exit 1
 	fi
 }
@@ -43,4 +43,5 @@ try 1 "2<=3"
 try 1 "3>=2"
 try 1 "2<=2"
 try 1 "2>=2"
+
 echo OK
