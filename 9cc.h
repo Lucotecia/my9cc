@@ -6,6 +6,7 @@ char* user_input;
 //トークンの種類
 typedef enum {
   TK_RESERVED,//予約語(記号)
+  TK_IDENT,
   TK_NUM,     //整数
   TK_EOF,     //入力の終端
 } TokenKind;
@@ -13,36 +14,41 @@ typedef enum {
 //トークン型
 typedef struct Token Token;
 struct Token {
-  TokenKind kind; //トークンの型
-  Token *next;    //次の入力トークン
-  int val;        //kindがTK_NUMの場合、その数値
-  char *str;      //トークン文字列
-  int len;        //トークンの長さ
+    TokenKind kind; //トークンの型
+    Token *next;    //次の入力トークン
+    int val;        //kindがTK_NUMの場合、その数値
+    char *str;      //トークン文字列
+    int len;        //トークンの長さ
 };
 
 Token *token;
 
 //抽象構文木のノードの型
 typedef enum {
-  ND_ADD, // +
-  ND_SUB, // -
-  ND_MUL, // *
-  ND_DIV, // /
-  ND_EQ,  // ==
-  ND_NE,  // !=
-  ND_LT,  // <
-  ND_LE,  // <=
-  ND_NUM, // integer
+    ND_ADD,   // +
+    ND_SUB,   // -
+    ND_MUL,   // *
+    ND_DIV,   // /
+    ND_ASSIGN,// =
+    ND_EQ,    // ==
+    ND_NE,    // !=
+    ND_LT,    // <
+    ND_LE,    // <=
+    ND_LVAR,  // ローカル変数
+    ND_NUM,   // 整数
 } NodeKind;
 
 //ノード本体(連結リスト)
 typedef struct Node Node;
 struct Node{
-  NodeKind kind; //ノードの型
-  Node *lhs;     //左辺
-  Node *rhs;     //右辺
-  int val;       //kindがND_NUMの場合のみ使う
+    NodeKind kind;//ノードの型
+    Node *lhs;    //左辺
+    Node *rhs;    //右辺
+    int val;      //kindがND_NUMの場合のみ使う
+    int offset;   //kindがND_LVARの場合のみ使う
 };
+
+Node *code[100];
 
 /*==codeden.cppで定義==*/
 void gen(Node *);               //main関数から呼ばれる
@@ -59,7 +65,10 @@ Node *mul();
 Node *add();
 Node *relational();
 Node *equality();
+Node *assign();
 Node *expr();
+Node *stmt();
+void program();
 /*=====================*/
 
 
